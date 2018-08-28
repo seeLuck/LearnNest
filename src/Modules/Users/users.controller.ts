@@ -1,7 +1,12 @@
-import {Controller, Get, Post, Request, Response, Param, Next, HttpStatus, Body} from "@nestjs/common";
+import {Controller, Get, Post, Request, Response, Param, Next, HttpStatus,
+    Body, UseFilters} from "@nestjs/common";
 import { CreateUserDTO } from './DTO/create-users.dto';
 import { UsersService } from './Services/users.serivce';
 import { ProductsService } from '../Products/Services/products.service';
+import { CustomForbiddenException } from '../../Shared/ExceptionFilters/forbidden.exception';
+import { HttpExceptionFilter } from '../../Shared/ExceptionFilters/http-exception.filter';
+import { ValidationPipe } from '../../Shared/Pipes/validation.pipe';
+import { ParseIntPipe } from '../../Shared/Pipes/parse-int.pipe';
 
 @Controller('users')
 export class UsersController {
@@ -16,7 +21,7 @@ export class UsersController {
             res.status(HttpStatus.OK).json(users);
         }catch (err){
             console.error(err);
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR);
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({err});
         }
     }
 
@@ -33,9 +38,17 @@ export class UsersController {
         }
     }
 
+    //新增/getException使用HttpException
+    @Get('getException')
+    @UseFilters(new HttpExceptionFilter())
+    async getException(@Request() req, @Response() res, @Next() next){
+        throw new CustomForbiddenException();
+    }
+
+
     @Get('/:id')
     //使用Express的參數
-    async getUser( @Response() res, @Param('id') id ) {
+    async getUser( @Response() res, @Param('id', new ParseIntPipe()) id ) {
         try {
             let user: CreateUserDTO = await this.userService.getUser(+id);
             res.status(HttpStatus.OK).json(user);
@@ -47,7 +60,7 @@ export class UsersController {
 
     @Post()
     //post過來的body要符合DTO class所描述的屬性
-    async addUser( @Response() res, @Body() createUserDTO:CreateUserDTO) {
+    async addUser( @Response() res, @Body(new ValidationPipe()) createUserDTO:CreateUserDTO) {
         try {
             let users: CreateUserDTO[] = await this.userService.addUser(createUserDTO);
             res.status(HttpStatus.OK).json(users);
