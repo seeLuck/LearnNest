@@ -1,5 +1,5 @@
 import {Controller, Get, Post, Request, Response, Param, Next, HttpStatus,
-    Body, UseFilters} from "@nestjs/common";
+    Body, UseFilters, UseGuards} from "@nestjs/common";
 import { CreateUserDTO } from './DTO/create-users.dto';
 import { UsersService } from './Services/users.serivce';
 import { ProductsService } from '../Products/Services/products.service';
@@ -7,13 +7,17 @@ import { CustomForbiddenException } from '../../Shared/ExceptionFilters/forbidde
 import { HttpExceptionFilter } from '../../Shared/ExceptionFilters/http-exception.filter';
 import { ValidationPipe } from '../../Shared/Pipes/validation.pipe';
 import { ParseIntPipe } from '../../Shared/Pipes/parse-int.pipe';
+import { RolesGuard } from '../../Shared/Guards/roles.guard';
+import { Roles } from '../../Shared/Decorators/roles.decorator';
 
 @Controller('users')
+@UseGuards(RolesGuard)
 export class UsersController {
     //依賴注入，建議要使用，這是低耦合作法
     constructor(private userService: UsersService, private productsService: ProductsService) { }
 
     @Get()
+    @Roles('general')
     //使用Express的參數
     async getAllUsers( @Request() req, @Response() res, @Next() next) {
         try {
@@ -59,6 +63,7 @@ export class UsersController {
     }
 
     @Post()
+    @Roles('admin')
     //post過來的body要符合DTO class所描述的屬性
     async addUser( @Response() res, @Body(new ValidationPipe()) createUserDTO:CreateUserDTO) {
         try {
