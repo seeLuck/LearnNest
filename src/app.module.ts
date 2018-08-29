@@ -1,11 +1,12 @@
 import {Module, NestModule, MiddlewareConsumer} from '@nestjs/common';
 import {UsersModule} from './Modules/Users/users.module';
+import {ChatModule} from './Modules/Chat/chat.module';
 import {UsersController} from './Modules/Users/users.controller';
 import {LoggerMiddleware} from './Shared/Middlewares/logger.middleware';
 import {SimpleMiddleware} from './Shared/Middlewares/simple.middleware';
 
 @Module({
-    imports: [UsersModule]
+    imports: [UsersModule, ChatModule]
 })
 
 export class ApplicationModule implements NestModule {

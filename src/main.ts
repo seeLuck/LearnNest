@@ -1,10 +1,15 @@
 import {NestFactory} from '@nestjs/core';
 import {ApplicationModule} from './app.module';
 import * as express from 'express';//使用express模組
+import * as path from 'path';
 import {INestApplication} from '@nestjs/common/interfaces/nest-application.interface';
 
 async function bootstrap(){
     const instance = express();
+
+    instance.set('views', path.join(__dirname, 'views'));
+    instance.set('view engine', 'ejs');
+
     const app: INestApplication = await NestFactory.create(ApplicationModule, instance);
     try {
         await app.listen(3000);
