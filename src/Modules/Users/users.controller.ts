@@ -1,5 +1,5 @@
 import {Controller, Get, Post, Request, Response, Param, Next, HttpStatus,
-    Body, UseFilters, UseGuards} from "@nestjs/common";
+    Body, UseFilters, UseGuards, UseInterceptors} from "@nestjs/common";
 import { CreateUserDTO } from './DTO/create-users.dto';
 import { UsersService } from './Services/users.serivce';
 import { ProductsService } from '../Products/Services/products.service';
@@ -9,6 +9,9 @@ import { ValidationPipe } from '../../Shared/Pipes/validation.pipe';
 import { ParseIntPipe } from '../../Shared/Pipes/parse-int.pipe';
 import { RolesGuard } from '../../Shared/Guards/roles.guard';
 import { Roles } from '../../Shared/Decorators/roles.decorator';
+import { LoggingInterceptor } from '../../Shared/Interceptors/logging.interceptor';
+import { TransformInterceptor } from '../../Shared/Interceptors/transform.interceptor';
+import { ExceptionInterceptor } from '../../Shared/Interceptors/exception.interceptor';
 
 @Controller('users')
 @UseGuards(RolesGuard)
@@ -49,6 +52,24 @@ export class UsersController {
         throw new CustomForbiddenException();
     }
 
+    @Get('testInterceptor')
+    @UseInterceptors(LoggingInterceptor)
+    async testInterceptor( @Request() req, @Response() res, @Next() next) {
+        console.log('執行testInterceptor()');
+        res.status(HttpStatus.OK).json();
+    }
+
+    @Get('testTransformInterceptor')
+    @UseInterceptors(TransformInterceptor)
+    async testTransformInterceptor( ) {
+        return "test response";
+    }
+
+    @Get('testExceptionInterceptor')
+    @UseInterceptors(ExceptionInterceptor)
+    async testExceptionInterceptor(@Request() req, @Response() res, @Next() next ) {
+        throw `123`;
+    }
 
     @Get('/:id')
     //使用Express的參數
