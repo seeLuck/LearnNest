@@ -1,7 +1,7 @@
 import {Controller, Get, Post, Request, Response, Param, Next, HttpStatus,
     Body, UseFilters, UseGuards, UseInterceptors} from "@nestjs/common";
 import { CreateUserDTO } from './DTO/create-users.dto';
-import { UsersService } from './Services/users.serivce';
+import { UsersService } from './Services/users.service';
 import { ProductsService } from '../Products/Services/products.service';
 import { CustomForbiddenException } from '../../Shared/ExceptionFilters/forbidden.exception';
 import { HttpExceptionFilter } from '../../Shared/ExceptionFilters/http-exception.filter';
@@ -25,6 +25,7 @@ export class UsersController {
     async getAllUsers( @Request() req, @Response() res, @Next() next) {
         try {
             let users: CreateUserDTO[] = await this.userService.getAllUsers();
+            //return users;
             res.status(HttpStatus.OK).json(users);
         }catch (err){
             console.error(err);
