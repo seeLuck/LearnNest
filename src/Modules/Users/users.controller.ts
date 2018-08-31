@@ -12,6 +12,7 @@ import { Roles } from '../../Shared/Decorators/roles.decorator';
 import { LoggingInterceptor } from '../../Shared/Interceptors/logging.interceptor';
 import { TransformInterceptor } from '../../Shared/Interceptors/transform.interceptor';
 import { ExceptionInterceptor } from '../../Shared/Interceptors/exception.interceptor';
+import { AuthGuard } from '@nestjs/passport'
 
 @Controller('users')
 @UseGuards(RolesGuard)
@@ -74,6 +75,7 @@ export class UsersController {
 
     @Get('/:id')
     //使用Express的參數
+    @UseGuards(AuthGuard('jwt'))
     async getUser( @Response() res, @Param('id', new ParseIntPipe()) id ) {
         try {
             let user: CreateUserDTO = await this.userService.getUser(+id);
