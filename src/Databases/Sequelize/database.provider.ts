@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
-import { CatsEntity } from '../../Modules/Cats/cats.entity';
+import { CatsEntity } from './Schemas/cats.entity';
 
 export const databaseProviders = [
     {

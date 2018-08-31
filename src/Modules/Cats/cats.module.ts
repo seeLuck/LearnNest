@@ -3,6 +3,7 @@ import { CatsServices } from './cats.services';
 import { CatsController } from './cats.controller';
 import { CatsProvider } from './cats.providers';
 import { DatabaseModule } from '../../Databases/Sequelize/database.module';
+//import { DatabaseModule } from '../../Databases/TypeORM/database.module';
 
 @Module({
     imports: [DatabaseModule],

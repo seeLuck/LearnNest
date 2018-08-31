@@ -1,4 +1,4 @@
-import { CatsEntity } from '../cats.entity';
+import { CatsEntity } from '../../../Databases/Sequelize/Schemas/cats.entity';
 import { ICats } from './ICats';
 
 export interface ICatsService {

@@ -1,13 +1,19 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { CatsEntity } from './cats.entity';
+import CatsEntity from './cats.providers';
 import { Model } from 'sequelize-typescript';
 import { ICats, ICatsService } from './DTO/index';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class CatsServices implements ICatsService {
     constructor(
         @Inject('CatsRepository') private readonly catsRepository: typeof CatsEntity,
         @Inject('SequelizeInstance') private readonly sequelizeInstance) { }
+
+    // constructor(
+    //     @Inject('CatsRepository')
+    //     private readonly catsRepository: Repository<CatsEntity>) { }
 
     public async findAll():Promise<Array<CatsEntity>>{
         return await this.catsRepository.findAll<CatsEntity>();
