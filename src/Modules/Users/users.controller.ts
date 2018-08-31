@@ -12,6 +12,7 @@ import { Roles } from '../../Shared/Decorators/roles.decorator';
 import { LoggingInterceptor } from '../../Shared/Interceptors/logging.interceptor';
 import { TransformInterceptor } from '../../Shared/Interceptors/transform.interceptor';
 import { ExceptionInterceptor } from '../../Shared/Interceptors/exception.interceptor';
+import { mixinCacheInterceptor } from '../../Shared/Interceptors/mixin-cache.interceptor';
 import { AuthGuard } from '@nestjs/passport'
 
 @Controller('users')
@@ -71,6 +72,12 @@ export class UsersController {
     @UseInterceptors(ExceptionInterceptor)
     async testExceptionInterceptor(@Request() req, @Response() res, @Next() next ) {
         throw `123`;
+    }
+
+    @Get('testMixinClass')
+    @UseInterceptors(mixinCacheInterceptor(() => true))
+    async testMixinClass() {
+        return "test mixin class";
     }
 
     @Get('/:id')
