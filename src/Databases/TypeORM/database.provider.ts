@@ -1,5 +1,6 @@
 import { createConnection } from 'typeorm';
 
+//这里就是Provider的工厂方法，貌似可以用来各种封装
 export const databaseProviders = [
     {
         provide: 'TypeORMInstance',
